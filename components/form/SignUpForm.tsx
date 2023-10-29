@@ -15,7 +15,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import GoogleSignInButton from "../GoogleSignInButton";
+import { useRouter } from "next/navigation";
 
+// define formSchema
 const formSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
@@ -32,7 +34,9 @@ const formSchema = z
   });
 
 const SignUpForm = () => {
-  // define form
+  // router
+  const router = useRouter();
+  // define form set default values null
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,9 +48,29 @@ const SignUpForm = () => {
   });
 
   // onSubmit
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }),
+      });
+
+      if (response.ok) {
+        router.push("/sign-in");
+      } else {
+        // TODO: fix this later?
+        console.error("Registration failed");
+      }
+    } catch (error) {
+      console.log("Something went wrong. Registeration failed.");
+    }
   }
 
   return (
@@ -101,7 +125,7 @@ const SignUpForm = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
