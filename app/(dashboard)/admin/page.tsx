@@ -4,8 +4,6 @@ import { getServerSession } from "next-auth";
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
 
-  console.log(session);
-
   if (session?.user) {
     return <div className="text-2xl">Welcome {session.user.name}</div>;
   }

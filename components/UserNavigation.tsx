@@ -5,7 +5,15 @@ import { Button } from "./ui/button";
 
 const UserNavigation = () => {
   return (
-    <Button onClick={async () => signOut()} variant="destructive">
+    <Button
+      onClick={async () =>
+        signOut({
+          redirect: true,
+          callbackUrl: `${window.location.origin}/sign-in`,
+        })
+      }
+      variant="destructive"
+    >
       Signout
     </Button>
   );
