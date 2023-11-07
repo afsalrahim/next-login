@@ -35,8 +35,6 @@ export const authOptions : NextAuthOptions = {
             if(!existingUser) { return null; }
             
             const passwordMatch = await compare(credentials.password, existingUser.password);
-            console.log("here")
-            console.log(passwordMatch);
 
             // not valid password
             if(!passwordMatch) { return null; }
@@ -49,4 +47,13 @@ export const authOptions : NextAuthOptions = {
             }
           }
         })
-      ]}
+      ],
+      callbacks: {
+        async jwt({ token, user }) {
+          return token
+        },
+        async session({ session, user, token }) {
+          return session
+        },
+      }
+    }

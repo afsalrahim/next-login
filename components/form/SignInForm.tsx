@@ -50,7 +50,7 @@ const SignInForm = () => {
       console.log(signInData);
       console.error(signInData.error);
     } else {
-      console.log("successs");
+      router.refresh(); // required to ensure that no stale page data shows up.
       router.push("/admin");
     }
   };
